@@ -74,13 +74,17 @@ def recurring_transactions():
         session['user_session_token'],
     )
 
-    Transaction.get_or_create_from_yodlee_transactions(
-        yodlee_transactions,
-        current_user.id
-    )
-    recurring_transactions = RecurringTransaction.get_by_user_id(
-        current_user.id
-    )
+    if yodlee_transactions:
+        Transaction.get_or_create_from_yodlee_transactions(
+            yodlee_transactions,
+            current_user.id
+        )
+        recurring_transactions = RecurringTransaction.get_by_user_id(
+            current_user.id
+        )
+    else:
+        recurring_transactions = []
+
     return render_template(
         'transactions/recurring_transactions.html',
         recurring_transactions=recurring_transactions

@@ -64,7 +64,11 @@ def get_yodlee_transactions_or_400(cobrand_session_token, user_session_token, pa
         logging.error(e, exc_info=True)
         abort(400)
 
+    if response.json() == {}:
+        return []
+
     transactions, errors = transaction_schema.load(response.json())
+
     if errors:
         logging.error(errors)
         abort(400)
