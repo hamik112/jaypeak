@@ -37,7 +37,7 @@ class TransactionAdmin(ModelView):
     column_display_pk = True
     column_searchable_list = ('description', 'amount', 'account_id')
     column_list = ('id', 'description', 'amount',
-                   'transaction_date', 'account_id', 'user')
+                   'date', 'account_id', 'user')
 
     def is_accessible(self):
         return current_user.has_role('admin')
