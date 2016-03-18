@@ -1,0 +1,15 @@
+{% extends "bootstrap/base.html" %}
+
+{% block styles %}
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  {{ super() }}
+  <link href='https://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+{% endblock %}
+
+{% block navbar %}
+  {% if current_user.is_authenticated %}
+    {% include 'navbar.html' %}
+    {% include 'flash.html' %}
+  {% endif %}
+{% endblock %}

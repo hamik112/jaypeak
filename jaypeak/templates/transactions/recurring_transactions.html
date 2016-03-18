@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading clearfix">
+            <strong>Recurring Transactions</strong>
+            <span class="pull-right">
+                <button class="btn btn-sm btn-default">
+                    <i class="fa fa-calendar"></i>
+                    Reminders
+                </button>
+                <button class="btn btn-sm btn-default">
+                    <i class="fa fa-remove"></i>
+                    Cancel
+                </button>
+
+            </span>
+        </div>
+        <!-- List group -->
+
+        <div class="list-group">
+        {% for recurring_transaction in recurring_transactions %}
+            {{ recurring_transaction_li(recurring_transaction) }}
+        {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% macro recurring_transaction_li(recurring_transaction) -%}
+<a href="#" class="list-group-item">
+    <div class="row">
+        <div class="col-sm-1">
+            <input type="checkbox">
+        </div>
+        <div class="col-sm-9">
+            {{ recurring_transaction.description }}
+        </div>
+        <div class="col-sm-2">
+            <span class="pull-right">
+                {{ recurring_transaction.amount }}
+            </span>
+        </div>
+
+    </div>
+</a>
+
+{%- endmacro %}

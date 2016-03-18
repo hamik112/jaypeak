@@ -1,0 +1,37 @@
+{% import "bootstrap/wtf.html" as wtf %}
+
+<form method="POST" action="{{ url_for('transactions.login') }}">
+
+    <h1 class="text-center">Login</h1>
+
+    {{ login_form.hidden_tag() }}`
+
+    {% include 'flash.html' %}
+
+    {% if login_form.username.errors %}
+        <div class="form-group has-error">
+            {{ login_form.username(class="form-control", placeholder="Email") }}
+            <p class="help-block">{{ login_form.username.errors[0] }}</p>
+        </div>
+    {% else %}
+        {{ login_form.username(class="form-group form-control", placeholder="Username") }}
+    {% endif %}
+
+    {% if login_form.password.errors %}
+        <div class="form-group has-error">
+            {{ login_form.password(class="form-control", placeholder="Password") }}
+            <p class="help-block">{{ login_form.password.errors[0] }}</p>
+        </div>
+    {% else %}
+        {{ login_form.password(class="form-group form-control", placeholder="Password") }}
+    {% endif %}
+
+    {{ wtf.form_field(login_form.remember) }}
+    <button type="submit" class="btn btn-default btn-lg btn-block">Login</button>
+    <a
+    type="button"
+    href="{{ url_for('transactions.register' )}}"
+    class="btn btn-primary btn-lg btn-block">
+        Register
+    </a>
+</form>
