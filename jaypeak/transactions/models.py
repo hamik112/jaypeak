@@ -43,7 +43,7 @@ class User(db.Model, UserMixin):
         db.session.commit()
 
     def __repr__(self):
-        return self.email
+        return '<User %r>' % self.id
 
 
 @login_manager.user_loader
