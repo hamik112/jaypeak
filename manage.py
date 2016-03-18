@@ -44,8 +44,15 @@ def create_local_db():
 
 
 @manager.command
-def create_testing_db():
+def create_test_db():
     engine = create_engine("postgres://localhost:5432/testing")
+    if not database_exists(engine.url):
+        create_database(engine.url)
+
+
+@manager.command
+def create_ci_db():
+    engine = create_engine("postgresql://postgres:@localhost:5432/ci")
     if not database_exists(engine.url):
         create_database(engine.url)
 

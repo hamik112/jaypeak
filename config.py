@@ -21,6 +21,15 @@ class TestConfig(Config):
     SECURITY_PASSWORD_SALT = None
 
 
+class CIConfig(Config):
+    DEBUG = True
+    TESTING = True
+    SECRET_KEY = 'U6IOODCSLXIM6GJVYPXEN3VT'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:@localhost:5432/ci'
+    SECURITY_PASSWORD_HASH = 'plaintext'
+    SECURITY_PASSWORD_SALT = None
+
+
 class LocalConfig(Config):
     DEBUG = True
     TESTING = False
