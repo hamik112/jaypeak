@@ -15,7 +15,7 @@ class UserAdmin(ModelView):
         return current_user.has_role('admin')
 
     def inaccessible_callback(self, name, **kwargs):
-        return redirect(url_for('security.login', next=request.url))
+        return redirect(url_for('transaction.login', next=request.url))
 
     def create_model(self, form):
         user = super(UserAdmin, self).create_model(form)
@@ -30,7 +30,7 @@ class RoleAdmin(ModelView):
         return current_user.has_role('admin')
 
     def inaccessible_callback(self, name, **kwargs):
-        return redirect(url_for('security.login', next=request.url))
+        return redirect(url_for('transaction.login', next=request.url))
 
 
 class TransactionAdmin(ModelView):
@@ -43,7 +43,7 @@ class TransactionAdmin(ModelView):
         return current_user.has_role('admin')
 
     def inaccessible_callback(self, name, **kwargs):
-        return redirect(url_for('security.login', next=request.url))
+        return redirect(url_for('transaction.login', next=request.url))
 
 
 def configure_transactions_admin(app, db):
