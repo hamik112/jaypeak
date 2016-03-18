@@ -70,6 +70,7 @@ def seed_db():
     role = Role(name='admin', description='admin')
     role.save()
     user = User(yodlee_user_id=10049403)
+    user.roles.append(role)
     user.save()
 
 
