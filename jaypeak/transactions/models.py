@@ -1,3 +1,5 @@
+from sqlalchemy import func
+
 from flask_login import UserMixin
 from flask_security import RoleMixin
 
@@ -59,54 +61,74 @@ class Transaction(db.Model):
     amount = db.Column(db.Numeric(10, 2), nullable=False)
     user_id = db.Column(db.ForeignKey('user.id'), nullable=False)
     yodlee_transaction_id = db.Column(db.Integer, nullable=False)
+    recurring_transaction_id = db.Column(db.ForeignKey('recurring_transaction.id'))  # nopep8
 
     @classmethod
-    def get_or_create_from_yodlee_transactions(cls, yodlee_transactions, user_id):  # nopep8
-        transactions = []
-        for yodlee_transaction in yodlee_transactions:
-            transaction = cls.query.filter_by(
-                user_id=user_id,
-                yodlee_transaction_id=yodlee_transaction.yodlee_transaction_id
-            ).first()
-            if transaction:
-                transactions.append(transaction)
-                continue
-            yodlee_transaction.user_id = user_id
-            db.session.add(yodlee_transaction)
-            transactions.append(yodlee_transaction)
+    def get_or_create_from_yodlee_transactions(cls, yodlee_transaction, user_id):  # nopep8
+        transaction = cls.query.filter_by(
+            user_id=user_id,
+            yodlee_transaction_id=yodlee_transaction.yodlee_transaction_id
+        ).first()
+        if transaction:
+            return transaction
 
-        db.session.commit()
-        return transactions
+        yodlee_transaction.user_id = user_id
+        yodlee_transaction.save()
+        return yodlee_transaction
 
     def save(self):
         db.session.add(self)
         db.session.commit()
 
 
-class RecurringTransaction(object):
-
-    def __init__(self, amount, description, transactions):
-        self.amount = amount
-        self.description = description
-        self.transactions = transactions
+class RecurringTransaction(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    transactions = db.relationship(
+        'Transaction',
+        backref='recurring_transaction',
+        lazy='dynamic',
+    )
 
     @classmethod
-    def get_by_user_id(cls, user_id):
-        rows = db.session.query(
-            Transaction.amount, Transaction.description
-        ).distinct().all()
-        recurring_transactions = []
-        for amount, description in rows:
-            transactions = Transaction.query.filter_by(
-                amount=amount, description=description, user_id=user_id
-            ).all()
+    def add_or_create_by_transaction(cls, transaction):
+        recurring_transaction = RecurringTransaction.query.join(
+            Transaction
+        ).filter(
+            func.levenshtein(Transaction.description, transaction.description) < 10,  # nopep8
+            Transaction.amount == transaction.amount,
+            Transaction.user_id == transaction.user_id,
+        ).first()
+        if not recurring_transaction:
+            recurring_transaction = RecurringTransaction()
 
-            if len(transactions) < 2:
-                continue
-            recurring_transaction = RecurringTransaction(
-                amount,
-                description,
-                transactions
-            )
-            recurring_transactions.append(recurring_transaction)
-        return recurring_transactions
+        recurring_transaction.transactions.append(transaction)
+        recurring_transaction.save()
+        return recurring_transaction
+
+    @classmethod
+    def get_by_user_id(self, user_id):
+        return RecurringTransaction.query.join(
+            Transaction
+        ).filter(
+            Transaction.user_id == user_id
+        ).group_by(
+            RecurringTransaction
+        ).having(
+            func.count(Transaction.id) > 1
+        ).all()
+
+    @property
+    def description(self):
+        return self.transactions[-1].description
+
+    @property
+    def amount(self):
+        return self.transactions[-1].amount
+
+    @property
+    def user_id(self):
+        return self.transactions[-1].user_id
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
