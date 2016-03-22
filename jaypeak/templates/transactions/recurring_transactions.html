@@ -6,17 +6,6 @@
         <!-- Default panel contents -->
         <div class="panel-heading clearfix">
             <strong>Recurring Transactions</strong>
-            <span class="pull-right">
-                <button class="btn btn-sm btn-default">
-                    <i class="fa fa-calendar"></i>
-                    Reminders
-                </button>
-                <button class="btn btn-sm btn-default">
-                    <i class="fa fa-remove"></i>
-                    Cancel
-                </button>
-
-            </span>
         </div>
         <!-- List group -->
 
@@ -31,12 +20,10 @@
 
 
 {% macro recurring_transaction_li(recurring_transaction) -%}
-<a href="#" class="list-group-item">
+<a href="{{ url_for('transactions.recurring_transaction', id=recurring_transaction.id) }}"
+   class="list-group-item">
     <div class="row">
-        <div class="col-sm-1">
-            <input type="checkbox">
-        </div>
-        <div class="col-sm-9">
+        <div class="col-sm-10">
             {{ recurring_transaction.description }}
         </div>
         <div class="col-sm-2">

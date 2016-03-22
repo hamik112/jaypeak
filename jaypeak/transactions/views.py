@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template, url_for, redirect, flash, session
+import json
+from flask import Blueprint, render_template, url_for, redirect, flash, \
+    session, abort, Response
 from flask_login import login_required, current_user, login_user, logout_user
 
 from ..extensions import yc
@@ -22,6 +24,24 @@ def login():
         if not error:
             login_user(user)
             session['user_session_token'] = token
+
+            yodlee_transactions = utils.get_yodlee_transactions_or_400(
+                session['cobrand_session_token'],
+                session['user_session_token'],
+            )
+
+            transactions = []
+            for yodlee_transaction in yodlee_transactions:
+                transaction = Transaction.get_or_create_from_yodlee_transactions(  # nopep8
+                    yodlee_transaction, current_user.id
+                )
+                transactions.append(transaction)
+
+            for transaction in transactions:
+                if transaction.recurring_transaction_id:
+                    continue
+                RecurringTransaction.add_or_create_by_transaction(transaction)
+
             return redirect(url_for('.recurring_transactions'))
 
         flash(error, 'danger')
@@ -69,26 +89,24 @@ def logout():
 @bp.route('/recurring-transactions')
 @login_required
 def recurring_transactions():
-    yodlee_transactions = utils.get_yodlee_transactions_or_400(
-        session['cobrand_session_token'],
-        session['user_session_token'],
-    )
-
-    if yodlee_transactions:
-        Transaction.get_or_create_from_yodlee_transactions(
-            yodlee_transactions,
-            current_user.id
-        )
-        recurring_transactions = RecurringTransaction.get_by_user_id(
-            current_user.id
-        )
-    else:
-        recurring_transactions = []
-
+    recurring_transactions = RecurringTransaction.get_by_user_id(current_user.id)  # nopep8
     return render_template(
         'transactions/recurring_transactions.html',
         recurring_transactions=recurring_transactions
     )
+
+
+@bp.route('/recurring-transactions/<int:id>')
+@login_required
+def recurring_transaction(id):
+    recurring_transaction = RecurringTransaction.query.get_or_404(id)
+    if current_user.id != recurring_transaction.user_id:
+        abort(404)
+
+    return Response([
+        transaction.description + ' ' + str(transaction.amount) + ' '
+        for transaction in recurring_transaction.transactions
+    ])
 
 
 @bp.route('/fastlink')
