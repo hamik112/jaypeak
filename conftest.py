@@ -5,8 +5,9 @@ from jaypeak import create_app
 from jaypeak.extensions import db, admin
 from jaypeak.transactions.models import User
 
+
 @pytest.fixture
-def app(config):
+def app():
     if os.environ.get('CONFIG') and os.environ.get('CONFIG') != 'config.CIConfig':  # nopep8
         raise RuntimeError('Invalid CONFIG environment variable')
     else:
