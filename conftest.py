@@ -8,9 +8,7 @@ from jaypeak.transactions.models import User
 
 @pytest.fixture
 def app():
-    if os.environ.get('CONFIG') and os.environ.get('CONFIG') != 'config.CIConfig':  # nopep8
-        raise RuntimeError('Invalid CONFIG environment variable')
-    else:
+    if not os.environ.get('CONFIG'):
         os.environ["CONFIG"] = 'config.TestConfig'
     # http://stackoverflow.com/questions/18002750/flask-admin-blueprint-creation-during-testing
     admin._views = []
