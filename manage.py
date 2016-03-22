@@ -5,8 +5,9 @@ import sys
 from flask import current_app as app
 from flask_script import Manager, prompt, prompt_pass, prompt_bool
 from sqlalchemy import create_engine
-from sqlalchemy_utils import database_exists, create_database
+from sqlalchemy_utils import database_exists, create_database, drop_database
 
+from config import TestConfig, CIConfig, LocalConfig
 import jaypeak
 from jaypeak import create_app
 from jaypeak.transactions.models import User, Role
@@ -38,23 +39,29 @@ def generate_secret_key():
 
 @manager.command
 def create_local_db():
-    engine = create_engine("postgres://localhost:5432/local")
-    if not database_exists(engine.url):
-        create_database(engine.url)
+    engine = create_engine(LocalConfig.SQLALCHEMY_DATABASE_URI)
+    if database_exists(engine.url):
+        drop_database(engine.url)
+    create_database(engine.url)
+    engine.execute('create extension if not exists fuzzystrmatch')
 
 
 @manager.command
 def create_test_db():
-    engine = create_engine("postgres://localhost:5432/testing")
-    if not database_exists(engine.url):
-        create_database(engine.url)
+    engine = create_engine(TestConfig.SQLALCHEMY_DATABASE_URI)
+    if database_exists(engine.url):
+        drop_database(engine.url)
+    create_database(engine.url)
+    engine.execute('create extension if not exists fuzzystrmatch')
 
 
 @manager.command
 def create_ci_db():
-    engine = create_engine("postgresql://postgres:@localhost:5432/ci")
-    if not database_exists(engine.url):
-        create_database(engine.url)
+    engine = create_engine(CIConfig.SQLALCHEMY_DATABASE_URI)
+    if database_exists(engine.url):
+        drop_database(engine.url)
+    create_database(engine.url)
+    engine.execute('create extension if not exists fuzzystrmatch')
 
 
 @manager.command
@@ -64,7 +71,7 @@ def drop_and_create_all_tables():
 
 
 @manager.command
-def seed_db():
+def seed():
     db.drop_all()
     db.create_all()
     role = Role(name='admin', description='admin')
