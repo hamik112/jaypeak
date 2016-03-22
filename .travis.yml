@@ -7,5 +7,5 @@ install: "pip install -r requirements.txt"
 before_script: "python manage.py create_ci_db"
 script:
   - make lint
-  - make test
+  - export CONFIG=config.CIConfig && make test
   - make coverage
