@@ -106,4 +106,3 @@ def test_get_by_user_id(app, user):
     RecurringTransaction.add_or_create_by_transaction(transaction2)
     recurring_transactions = RecurringTransaction.get_by_user_id(user.id)
     assert len(recurring_transactions) == 1
-
