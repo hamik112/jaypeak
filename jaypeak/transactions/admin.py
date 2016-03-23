@@ -48,8 +48,7 @@ class TransactionAdmin(ModelView):
 
 
 class MyInlineModelForm(InlineFormAdmin):
-    form_columns = ('id', 'description', 'amount',
-                   'date', 'account_id', 'user')
+    form_columns = ('id', 'description', 'amount', 'date', 'account_id', 'user')  # nopep8
 
 
 class RecurringTransactionAdmin(ModelView):
@@ -61,7 +60,6 @@ class RecurringTransactionAdmin(ModelView):
 
     def inaccessible_callback(self, name, **kwargs):
         return redirect(url_for('transactions.login', next=request.url))
-
 
 
 def configure_transactions_admin(app, db):
