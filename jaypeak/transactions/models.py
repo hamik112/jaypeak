@@ -1,6 +1,6 @@
 from sqlalchemy import func
 
-from flask_login import UserMixin
+from flask_login import UserMixin, AnonymousUserMixin
 from flask_security import RoleMixin
 
 from ..extensions import db, login_manager
@@ -46,6 +46,11 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return '<User %r>' % self.id
+
+
+class AnonymousUser(AnonymousUserMixin):
+    def has_role(self, role):
+        return False
 
 
 @login_manager.user_loader

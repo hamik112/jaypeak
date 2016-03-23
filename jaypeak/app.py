@@ -9,7 +9,7 @@ from .extensions import bootstrap, db, security, admin, login_manager, yc
 from . import transactions
 from jaypeak.transactions import utils
 from .transactions.admin import configure_transactions_admin
-from .transactions.models import User, Role
+from .transactions.models import User, Role, AnonymousUser
 from .yodlee import ProductionConfig, SandboxConfig
 
 
@@ -29,6 +29,7 @@ def create_app():
     admin.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = 'transactions.login'
+    login_manager.anonymous_user = AnonymousUser
 
     configure_transactions_admin(app, db)
 
