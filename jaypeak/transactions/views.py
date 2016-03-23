@@ -103,10 +103,10 @@ def recurring_transaction(id):
     if current_user.id != recurring_transaction.user_id:
         abort(404)
 
-    return Response([
-        transaction.description + ' ' + str(transaction.amount) + ' '
-        for transaction in recurring_transaction.transactions
-    ])
+    return render_template(
+        'transactions/recurring_transaction.html',
+        recurring_transaction=recurring_transaction
+    )
 
 
 @bp.route('/fastlink')
