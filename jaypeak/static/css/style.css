@@ -5,3 +5,13 @@ body {
 input.form-control{
     height: 44px;
 }
+
+.navbar-brand{
+    height: auto;
+}
+
+i{
+    font-size: 48px;
+}
+
+
