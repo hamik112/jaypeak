@@ -11,6 +11,11 @@ from . import utils
 bp = Blueprint('transactions', __name__)
 
 
+@bp.route('/')
+def index():
+    return render_template('transactions/index.html')
+
+
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     login_form = LoginForm()
@@ -85,7 +90,6 @@ def logout():
     return redirect(url_for('.login'))
 
 
-@bp.route('/')
 @bp.route('/recurring-transactions')
 @login_required
 def recurring_transactions():

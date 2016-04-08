@@ -28,7 +28,7 @@ def create_app():
     db.init_app(app)
     admin.init_app(app)
     login_manager.init_app(app)
-    login_manager.login_view = 'transactions.login'
+    login_manager.login_view = 'transactions.index'
     login_manager.anonymous_user = AnonymousUser
 
     configure_transactions_admin(app, db)

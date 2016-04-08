@@ -4,6 +4,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   {{ super() }}
   <link href='https://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Coda:800' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/fontello.css') }}">
 {% endblock %}
@@ -12,5 +13,7 @@
   {% if current_user.is_authenticated %}
     {% include 'navbar.html' %}
     {% include 'flash.html' %}
+  {% else %}
+    {% include 'anonymous_navbar.html' %}
   {% endif %}
 {% endblock %}

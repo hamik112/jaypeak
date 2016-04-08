@@ -1,5 +1,6 @@
 body {
     font-family: Roboto;
+    background: url('../img/background.png');
 }
 
 input.form-control{
@@ -8,6 +9,7 @@ input.form-control{
 
 .navbar{
     text-transform: uppercase;
+    margin-bottom: 0px;
 }
 
 @media(min-width: 768px){
@@ -27,4 +29,20 @@ input.form-control{
     i {
         font-size: 30px;
     }
+}
+
+h1.index {
+    font-family: Coda;
+    letter-spacing: 10px;
+    font-size: 64px;
+    text-transform: uppercase;
+}
+
+h3.index {
+    letter-spacing: 2px;
+    font-size: 32px;
+}
+
+.btn {
+    text-transform: uppercase;
 }
