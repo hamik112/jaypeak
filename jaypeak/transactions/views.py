@@ -1,6 +1,5 @@
-import json
 from flask import Blueprint, render_template, url_for, redirect, flash, \
-    session, abort, Response
+    session, abort, request
 from flask_login import login_required, current_user, login_user, logout_user
 
 from ..extensions import yc
@@ -93,7 +92,12 @@ def logout():
 @bp.route('/recurring-transactions')
 @login_required
 def recurring_transactions():
-    recurring_transactions = RecurringTransaction.get_by_user_id(current_user.id)  # nopep8
+    if request.args.get('page') is None:
+        page = 1
+    else:
+        page = int(request.args.get('page'))
+    query = RecurringTransaction.query_by_user_id(current_user.id)  # nopep8
+    recurring_transactions = query.paginate(page, 5, True)
     return render_template(
         'transactions/recurring_transactions.html',
         recurring_transactions=recurring_transactions

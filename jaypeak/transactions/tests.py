@@ -90,8 +90,8 @@ def test_get_by_user_id(app, user):
     transaction1.save()
     RecurringTransaction.add_or_create_by_transaction(transaction1)
 
-    recurring_transactions = RecurringTransaction.get_by_user_id(user.id)
-    assert len(recurring_transactions) == 0
+    query = RecurringTransaction.query_by_user_id(user.id)
+    assert len(query.all()) == 0
 
     transaction2 = Transaction(
         date=datetime.now() - relativedelta(months=1),
@@ -104,5 +104,5 @@ def test_get_by_user_id(app, user):
     transaction2.save()
 
     RecurringTransaction.add_or_create_by_transaction(transaction2)
-    recurring_transactions = RecurringTransaction.get_by_user_id(user.id)
-    assert len(recurring_transactions) == 1
+    query = RecurringTransaction.query_by_user_id(user.id)
+    assert len(query.all()) == 1

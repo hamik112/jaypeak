@@ -111,7 +111,7 @@ class RecurringTransaction(db.Model):
         return recurring_transaction
 
     @classmethod
-    def get_by_user_id(self, user_id):
+    def query_by_user_id(self, user_id):
         return RecurringTransaction.query.join(
             Transaction
         ).filter(
@@ -120,7 +120,7 @@ class RecurringTransaction(db.Model):
             RecurringTransaction
         ).having(
             func.count(Transaction.id) > 1
-        ).all()
+        )
 
     @property
     def description(self):
