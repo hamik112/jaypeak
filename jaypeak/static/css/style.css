@@ -61,3 +61,7 @@ h3.recurring-transaction{
 .fa-remove{
     padding-left: 8px;
 }
+
+hr{
+    border-color: #ddd;
+}
