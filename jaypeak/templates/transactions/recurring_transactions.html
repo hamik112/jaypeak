@@ -1,38 +1,38 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-    <div class="panel panel-default">
-        <!-- Default panel contents -->
-        <div class="panel-heading clearfix">
-            <strong>Recurring Transactions</strong>
+<div class="container" style="padding-top: 60px;">
+    <div class="list-group">
+     <div class="list-group-item">
+        <div class="row text-center text-bold">
+            <div class="col-md-4">
+                <h4><strong>Date</strong></h4>
+            </div>
+            <div class="col-md-4">
+                <h4><strong>Description</strong></h4>
+            </div>
+            <div class="col-md-4">
+                <h4><strong>Amount</strong></h4>
+            </div>
         </div>
-        <!-- List group -->
-
-        <div class="list-group">
+    </div>
         {% for recurring_transaction in recurring_transactions %}
-            {{ recurring_transaction_li(recurring_transaction) }}
+            <a href="{{ url_for('transactions.recurring_transaction', id=recurring_transaction.id) }}"
+               class="list-group-item">
+
+                <div class="row text-center">
+                    <div class="col-md-4">
+                        <span>{{ recurring_transaction.date}}<span>
+                    </div>
+                    <div class="col-md-4">
+                        <span>{{ recurring_transaction.description }}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <span>${{ recurring_transaction.amount }}</span>
+                    </div>
+                </div>
+            </a>
         {% endfor %}
-        </div>
     </div>
 </div>
 {% endblock %}
-
-
-{% macro recurring_transaction_li(recurring_transaction) -%}
-<a href="{{ url_for('transactions.recurring_transaction', id=recurring_transaction.id) }}"
-   class="list-group-item">
-    <div class="row">
-        <div class="col-sm-10">
-            {{ recurring_transaction.description }}
-        </div>
-        <div class="col-sm-2">
-            <span class="pull-right">
-                {{ recurring_transaction.amount }}
-            </span>
-        </div>
-
-    </div>
-</a>
-
-{%- endmacro %}
