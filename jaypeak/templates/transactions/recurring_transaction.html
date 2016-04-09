@@ -1,24 +1,44 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
+<div class="container" style="padding-top: 20px;">
 
-    <p class="text-right">
-        <button class="btn btn-md btn-default">APPROVE <i class="fa fa-check"></i></button>
-        <button class="btn btn-md btn-default">REMINDER <i class="fa fa-calendar"></i></button>
-        <button class="btn btn-md btn-default">CANCEL <i class="fa fa-remove"></i></button>
-    </p>
+    <h3 class="recurring-transaction">
+        Transaction History
+        <span class="pull-right">
+            <button class="btn btn-md btn-default">Cancel <i class="fa fa-remove"></i></button>
+        </span>
+    </h3>
     <div class="list-group">
+        <div class="list-group-item">
+            <div class="row text-center text-bold">
+                <div class="col-md-4">
+                    <h4><strong>Date</strong></h4>
+                </div>
+                <div class="col-md-4">
+                    <h4><strong>Description</strong></h4>
+                </div>
+                <div class="col-md-4">
+                    <h4><strong>Amount</strong></h4>
+                </div>
+            </div>
+        </div>
         {% for transaction in recurring_transaction.transactions %}
         <div class="list-group-item">
-
-            <h4 class="list-group-item-heading">{{ transaction.description }}</h4>
-            <p class="list-group-item-text">
-                ${{ transaction.amount }}
-                <span class="text-muted pull-right">{{ transaction.date}}</span>
-            </p>
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <span>{{ transaction.date}}<span>
+                </div>
+                <div class="col-md-4">
+                    <span>{{ transaction.description }}</span>
+                </div>
+                <div class="col-md-4">
+                    <span>${{ transaction.amount }}</span>
+                </div>
             </div>
+        </div>
         {% endfor %}
     </div>
+
 </div>
 {% endblock %}

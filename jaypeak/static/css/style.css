@@ -1,10 +1,11 @@
 body {
     font-family: Roboto;
     background: url('../img/background.png');
+    font-size: 16px;
 }
 
 input.form-control{
-    height: 44px;
+    height: 56px;
 }
 
 .navbar{
@@ -43,6 +44,16 @@ h3.index {
     font-size: 32px;
 }
 
+h3.recurring-transaction{
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
 .btn {
     text-transform: uppercase;
+}
+
+.list-group-item{
+    padding-top: 24px;
+    padding-bottom: 24px;
 }
