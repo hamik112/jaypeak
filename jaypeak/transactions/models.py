@@ -131,6 +131,10 @@ class RecurringTransaction(db.Model):
         return self.transactions[-1].amount
 
     @property
+    def date(self):
+        return self.transactions[-1].date
+
+    @property
     def user_id(self):
         return self.transactions[-1].user_id
 
