@@ -36,7 +36,7 @@
                 </div>
             </div>
         </div>
-        {% for transaction in recurring_transaction.transactions %}
+        {% for transaction in recurring_transaction.transactions.paginate(page, 5, True).items %}
         <div class="list-group-item">
             <div class="row text-center">
                 <div class="col-xs-3">
@@ -52,6 +52,8 @@
         </div>
         {% endfor %}
     </div>
+    {% from "bootstrap/pagination.html" import render_pagination %}
+    {{ render_pagination(recurring_transaction.transactions.paginate(page, 5, True)) }}
 
 </div>
 {% endblock %}

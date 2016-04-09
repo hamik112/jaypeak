@@ -107,13 +107,17 @@ def recurring_transactions():
 @bp.route('/recurring-transactions/<int:id>')
 @login_required
 def recurring_transaction(id):
+    if request.args.get('page') is None:
+        page = 1
+    else:
+        page = int(request.args.get('page'))
     recurring_transaction = RecurringTransaction.query.get_or_404(id)
     if current_user.id != recurring_transaction.user_id:
         abort(404)
-
     return render_template(
         'transactions/recurring_transaction.html',
-        recurring_transaction=recurring_transaction
+        recurring_transaction=recurring_transaction,
+        page=page,
     )
 
 
