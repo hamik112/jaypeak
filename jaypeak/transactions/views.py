@@ -121,6 +121,26 @@ def recurring_transaction(id):
     )
 
 
+@bp.route('/settings')
+@login_required
+def settings():
+    return render_template(
+        'transactions/settings.html',
+    )
+
+
+@bp.route('/delete-user')
+@login_required
+def delete_user():
+    utils.delete_user_or_400(
+        session['cobrand_session_token'],
+        session['user_session_token'],
+    )
+    logout_user()
+    flash('Your account was deleted')
+    return redirect(url_for('.index'))
+
+
 @bp.route('/fastlink')
 @login_required
 def fastlink():

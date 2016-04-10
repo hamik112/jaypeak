@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="padding-top: 20px;">
+
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="nav nav-pills nav-stacked">
+                  <li role="presentation" class="active">
+                      <a href="{{ url_for('transactions.settings') }}">Profile</a>
+                  </li>
+                  <li role="presentation">
+                      <a href="#">
+                          Accounts
+                      </a>
+                  </li>
+                  <li role="presentation">
+                      <a href="{{ url_for('transactions.logout') }}">Logout</a>
+                  </li>
+            </ul>
+        </div>
+        <div class="col-md-9">
+            <h3>Delete this account
+                <span class="pull-right">
+                    <button class="btn btn-danger btn-lg"
+                            data-toggle="modal"
+                            data-target="#delete-account">
+                        Delete this account
+                    </button>
+                </span>
+
+            </h3>
+            <p class="text-muted">This cannot be undone</p>
+
+        </div>
+    </div>
+
+    <div id="delete-account" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteAccount">
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+             <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Are you sure you want to delete this account?</h4>
+             </div>
+             <div class="modal-body">
+                This cannot be undone
+             </div>
+             <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    Close
+                </button>
+                <a href="{{ url_for('transactions.delete_user') }}" type="button" class="btn btn-danger">
+                    Delete it
+                </a>
+             </div>
+        </div>
+      </div>
+    </div>
+
+</div>
+{% endblock %}

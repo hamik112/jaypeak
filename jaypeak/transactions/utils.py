@@ -94,6 +94,17 @@ def get_yodlee_fastlink_token_or_400(cobrand_session_token, user_session_token):
     return fastlink_token
 
 
+def delete_user_or_400(cobrand_session_token, user_session_token):
+    try:
+        yc.unregister_user(
+            cobrand_session_token,
+            user_session_token,
+        )
+    except (RequestException, ValueError) as e:
+        logging.error(e, exc_info=True)
+        abort(400)
+
+
 def login_yodlee_user(cobrand_session_token, username, password):
     response = yc.login_user(cobrand_session_token, username, password)
     user, user_errors = user_schema.load(response.json())

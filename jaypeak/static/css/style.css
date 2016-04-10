@@ -65,3 +65,7 @@ h3.recurring-transaction{
 hr{
     border-color: #ddd;
 }
+
+li{
+    text-transform: uppercase;
+}
