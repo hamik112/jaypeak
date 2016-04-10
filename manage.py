@@ -67,9 +67,7 @@ def create_ci_db():
 @manager.command
 def update_production_db():
     engine = create_engine(ProductionConfig.SQLALCHEMY_DATABASE_URI)
-    create_database(engine.url)
     engine.execute('create extension if not exists fuzzystrmatch')
-
 
 @manager.command
 def drop_and_create_all_tables():
