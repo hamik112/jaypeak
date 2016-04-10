@@ -7,7 +7,7 @@ from flask_script import Manager, prompt, prompt_pass, prompt_bool
 from sqlalchemy import create_engine
 from sqlalchemy_utils import database_exists, create_database, drop_database
 
-from config import TestConfig, CIConfig, LocalConfig
+from config import TestConfig, CIConfig, LocalConfig, ProductionConfig
 import jaypeak
 from jaypeak import create_app
 from jaypeak.transactions.models import User, Role
@@ -60,6 +60,13 @@ def create_ci_db():
     engine = create_engine(CIConfig.SQLALCHEMY_DATABASE_URI)
     if database_exists(engine.url):
         drop_database(engine.url)
+    create_database(engine.url)
+    engine.execute('create extension if not exists fuzzystrmatch')
+
+
+@manager.command
+def update_production_db():
+    engine = create_engine(ProductionConfig.SQLALCHEMY_DATABASE_URI)
     create_database(engine.url)
     engine.execute('create extension if not exists fuzzystrmatch')
 
