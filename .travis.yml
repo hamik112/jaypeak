@@ -9,3 +9,5 @@ script:
   - make lint
   - export CONFIG=config.CIConfig && make test
   - make coverage
+before_deploy:
+  - python manage.py update_production_db
