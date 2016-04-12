@@ -5,7 +5,8 @@ import os
 from flask import Flask, session
 from flask_security import SQLAlchemyUserDatastore
 
-from .extensions import bootstrap, db, security, admin, login_manager, yc
+from .extensions import bootstrap, db, security, admin, login_manager, yc, \
+    toolbar
 from . import transactions
 from jaypeak.transactions import utils
 from .transactions.admin import configure_transactions_admin
@@ -30,6 +31,8 @@ def create_app():
     login_manager.init_app(app)
     login_manager.login_view = 'transactions.index'
     login_manager.anonymous_user = AnonymousUser
+
+    toolbar.init_app(app)
 
     configure_transactions_admin(app, db)
 

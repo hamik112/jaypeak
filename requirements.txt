@@ -9,6 +9,7 @@ dominate==2.1.16
 Flask==0.10.1
 Flask-Admin==1.4.0
 Flask-Bootstrap==3.3.5.7
+Flask-DebugToolbar==0.10.0
 Flask-Login==0.3.2
 Flask-Mail==0.9.1
 Flask-Principal==0.4.0
