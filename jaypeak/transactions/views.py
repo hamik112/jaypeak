@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, url_for, redirect, flash, \
 from flask_login import login_required, current_user, login_user, logout_user
 
 from ..extensions import yc
-from .models import Transaction, RecurringTransaction
+from .models import Transaction, RecurringTransaction, User
 from .forms import LoginForm, RegisterForm
 from . import utils
 
@@ -19,11 +19,16 @@ def index():
 def login():
     login_form = LoginForm()
     if login_form.validate_on_submit():
-        user, token, error = utils.login_yodlee_user(
-            session['cobrand_session_token'],
-            login_form.username.data,
-            login_form.password.data
-        )
+        user = User.query.filter_by(email=login_form.email.data).first()
+
+        if user:
+            user, token, error = utils.login_yodlee_user(
+                session['cobrand_session_token'],
+                user.username,
+                login_form.password.data
+            )
+        else:
+            error = 'Email not found'
 
         if not error:
             login_user(user)
@@ -60,13 +65,17 @@ def login():
 def register():
     register_form = RegisterForm()
     if register_form.validate_on_submit():
-        user, token, error = utils.register_yodlee_user(
+        user = User(email=register_form.email.data)
+        user.save()
+
+        yodlee_user, token, error = utils.register_yodlee_user(
             session['cobrand_session_token'],
-            register_form.username.data,
+            user.username,
             register_form.password.data,
-            register_form.email.data,
+            user.email,
         )
         if not error:
+            user.yodlee_user_id = yodlee_user.yodlee_user_id
             user.save()
             session['user_session_token'] = token
             login_user(user)

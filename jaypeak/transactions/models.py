@@ -25,6 +25,7 @@ class Role(db.Model, RoleMixin):
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     yodlee_user_id = db.Column(db.Integer)
+    email = db.Column(db.String(255), unique=True, nullable=False)
     recurring_transactions = db.relationship(
         'RecurringTransaction',
         backref='user',
@@ -42,6 +43,10 @@ class User(db.Model, UserMixin):
         secondary=roles_users,
         backref=db.backref('users', lazy='dynamic')
     )
+
+    @property
+    def username(self):
+        return 'dollarbackgirl{}'.format(self.id)
 
     def has_role(self, role):
         return role in self.roles
@@ -76,7 +81,7 @@ class Transaction(db.Model):
     amount = db.Column(db.Numeric(10, 2), nullable=False)
     user_id = db.Column(db.ForeignKey('user.id'), nullable=False)
     yodlee_transaction_id = db.Column(db.Integer, nullable=False)
-    recurring_transaction_id = db.Column(db.ForeignKey('recurring_transaction.id', ondelete='CASCADE'))
+    recurring_transaction_id = db.Column(db.ForeignKey('recurring_transaction.id'))  # nopep8
 
     @classmethod
     def get_or_create_from_yodlee_transactions(cls, yodlee_transaction, user_id):  # nopep8
@@ -117,7 +122,9 @@ class RecurringTransaction(db.Model):
             Transaction.amount == transaction.amount,
         ).first()
         if not recurring_transaction:
-            recurring_transaction = RecurringTransaction(user_id=transaction.user_id)
+            recurring_transaction = RecurringTransaction(
+                user_id=transaction.user_id
+            )
 
         recurring_transaction.transactions.append(transaction)
         recurring_transaction.save()

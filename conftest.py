@@ -21,6 +21,6 @@ def app():
 
 @pytest.fixture
 def user(app):
-    user = User(yodlee_user_id=1)
+    user = User(yodlee_user_id=1, email='user@example.com')
     user.save()
     return user

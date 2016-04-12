@@ -8,13 +8,13 @@
 
     {% include 'flash.html' %}
 
-    {% if login_form.username.errors %}
+    {% if login_form.email.errors %}
         <div class="form-group has-error">
-            {{ login_form.username(class="form-control", placeholder="Email") }}
-            <p class="help-block">{{ login_form.username.errors[0] }}</p>
+            {{ login_form.email(class="form-control", placeholder="Email") }}
+            <p class="help-block">{{ login_form.email.errors[0] }}</p>
         </div>
     {% else %}
-        {{ login_form.username(class="form-group form-control", placeholder="Username") }}
+        {{ login_form.email(class="form-group form-control", placeholder="Email") }}
     {% endif %}
 
     {% if login_form.password.errors %}

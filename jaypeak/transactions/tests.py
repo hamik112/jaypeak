@@ -5,7 +5,6 @@ from dateutil.relativedelta import relativedelta
 from .models import Transaction, RecurringTransaction, User
 
 
-
 def test_add_or_create_by_transaction(app, user):
     transaction1 = Transaction(
         date=datetime.now(),
@@ -126,5 +125,3 @@ def test_user_delete_cascade(app, user):
     assert len(User.query.all()) == 0
     assert len(Transaction.query.all()) == 0
     assert len(RecurringTransaction.query.all()) == 0
-
-
