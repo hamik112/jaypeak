@@ -17,6 +17,11 @@
         {{ register_form.email(class="form-group form-control", placeholder="Email") }}
     {% endif %}
 
+    <p class="help-block">
+        Password must be at least 8 characters long and contain at least one upper case letter,
+        one number and any of these special characters !@#$%^&*() ].
+    </p>
+
     {% if register_form.password.errors %}
         <div class="form-group has-error">
             {{ register_form.password(class="form-control", placeholder="Password") }}
