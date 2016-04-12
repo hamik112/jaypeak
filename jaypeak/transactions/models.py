@@ -25,11 +25,17 @@ class Role(db.Model, RoleMixin):
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     yodlee_user_id = db.Column(db.Integer)
-
+    recurring_transactions = db.relationship(
+        'RecurringTransaction',
+        backref='user',
+        lazy='dynamic',
+        cascade='all,delete-orphan',
+    )
     transactions = db.relationship(
         'Transaction',
         backref='user',
         lazy='dynamic',
+        cascade='all,delete-orphan',
     )
     roles = db.relationship(
         'Role',
@@ -42,6 +48,10 @@ class User(db.Model, UserMixin):
 
     def save(self):
         db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
         db.session.commit()
 
     def __repr__(self):
@@ -66,7 +76,7 @@ class Transaction(db.Model):
     amount = db.Column(db.Numeric(10, 2), nullable=False)
     user_id = db.Column(db.ForeignKey('user.id'), nullable=False)
     yodlee_transaction_id = db.Column(db.Integer, nullable=False)
-    recurring_transaction_id = db.Column(db.ForeignKey('recurring_transaction.id'))  # nopep8
+    recurring_transaction_id = db.Column(db.ForeignKey('recurring_transaction.id', ondelete='CASCADE'))
 
     @classmethod
     def get_or_create_from_yodlee_transactions(cls, yodlee_transaction, user_id):  # nopep8
@@ -88,10 +98,13 @@ class Transaction(db.Model):
 
 class RecurringTransaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.ForeignKey('user.id'), nullable=False)
     transactions = db.relationship(
         'Transaction',
         backref='recurring_transaction',
         lazy='dynamic',
+        cascade='all,delete-orphan',
+        passive_deletes=True,
     )
 
     @classmethod
@@ -99,12 +112,12 @@ class RecurringTransaction(db.Model):
         recurring_transaction = RecurringTransaction.query.join(
             Transaction
         ).filter(
+            RecurringTransaction.user_id == transaction.user_id,
             func.levenshtein(Transaction.description, transaction.description) < 10,  # nopep8
             Transaction.amount == transaction.amount,
-            Transaction.user_id == transaction.user_id,
         ).first()
         if not recurring_transaction:
-            recurring_transaction = RecurringTransaction()
+            recurring_transaction = RecurringTransaction(user_id=transaction.user_id)
 
         recurring_transaction.transactions.append(transaction)
         recurring_transaction.save()
@@ -133,10 +146,6 @@ class RecurringTransaction(db.Model):
     @property
     def date(self):
         return self.transactions[-1].date
-
-    @property
-    def user_id(self):
-        return self.transactions[-1].user_id
 
     def save(self):
         db.session.add(self)

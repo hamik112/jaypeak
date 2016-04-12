@@ -94,7 +94,7 @@ def get_yodlee_fastlink_token_or_400(cobrand_session_token, user_session_token):
     return fastlink_token
 
 
-def delete_user_or_400(cobrand_session_token, user_session_token):
+def unregister_yodlee_user_or_400(cobrand_session_token, user_session_token):
     try:
         yc.unregister_user(
             cobrand_session_token,

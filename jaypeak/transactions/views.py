@@ -132,10 +132,11 @@ def settings():
 @bp.route('/delete-user')
 @login_required
 def delete_user():
-    utils.delete_user_or_400(
+    utils.unregister_yodlee_user_or_400(
         session['cobrand_session_token'],
         session['user_session_token'],
     )
+    current_user.delete()
     logout_user()
     flash('Your account was deleted')
     return redirect(url_for('.index'))
