@@ -17,15 +17,6 @@
         {{ register_form.email(class="form-group form-control", placeholder="Email") }}
     {% endif %}
 
-    {% if register_form.username.errors %}
-        <div class="form-group has-error">
-            {{ register_form.username(class="form-control", placeholder="Username") }}
-            <p class="help-block">{{ register_form.username.errors[0] }}</p>
-        </div>
-    {% else %}
-        {{ register_form.username(class="form-group form-control", placeholder="Username") }}
-    {% endif %}
-
     {% if register_form.password.errors %}
         <div class="form-group has-error">
             {{ register_form.password(class="form-control", placeholder="Password") }}

@@ -12,7 +12,6 @@ class LoginForm(Form):
 
 class RegisterForm(Form):
     email = EmailField('Email', validators=[Email(), DataRequired()])
-    username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     password_confirm = PasswordField(
         'Confirm Password',
