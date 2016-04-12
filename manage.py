@@ -89,7 +89,6 @@ def seed():
 @manager.command
 def make_yodlee_user():
     email = prompt('Email')
-    username = prompt('Username')
     password = prompt_pass('Password')
     password_confirm = prompt_pass('Confirm Password')
 
@@ -103,21 +102,28 @@ def make_yodlee_user():
     if errors:
         sys.exit()
 
+    user = User(email=email)
+    user.save()
+
     response = yc.register_user(
         cobrand_session_token,
-        username,
+        user.username,
         password,
         email,
     )
-    user, errors = user_schema.load(response)
+    yodlee_user, errors = user_schema.load(response)
     if errors:
         logging.error('response: {}'.format(response))
+
+    user.yodlee_user_id = yodlee_user.yodlee_user_id
+    user.save()
 
 
 @manager.command
 def make_user():
     yodlee_user_id = prompt('Yodlee User Id')
-    user = User(yodlee_user_id=yodlee_user_id)
+    email = prompt('Email')
+    user = User(yodlee_user_id=yodlee_user_id, email=email)
 
     if prompt_bool('Admin'):
         role = Role.query.filter_by(name='admin').first()
