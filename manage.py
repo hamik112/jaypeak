@@ -129,9 +129,13 @@ def make_yodlee_user():
 def make_user():
     yodlee_user_id = prompt('Yodlee User Id')
     email = prompt('Email')
-    username = prompt('Username [optional]')
+    _username = prompt('Username [optional]')
 
-    user = User(yodlee_user_id=yodlee_user_id, email=email)
+    user = User(
+        yodlee_user_id=yodlee_user_id,
+        email=email,
+        _username=_username,
+    )
 
     if prompt_bool('Admin'):
         role = Role.query.filter_by(name='admin').first()
