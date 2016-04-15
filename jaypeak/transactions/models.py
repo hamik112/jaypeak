@@ -26,6 +26,7 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     yodlee_user_id = db.Column(db.Integer)
     email = db.Column(db.String(255), unique=True, nullable=False)
+    _username = db.Column(db.String(255), unique=True)
     recurring_transactions = db.relationship(
         'RecurringTransaction',
         backref='user',
@@ -46,6 +47,9 @@ class User(db.Model, UserMixin):
 
     @property
     def username(self):
+        if self._username:
+            return self._username
+
         return 'dollarbackgirl{}'.format(self.id)
 
     def has_role(self, role):

@@ -69,6 +69,7 @@ def update_production_db():
     engine = create_engine(ProductionConfig.SQLALCHEMY_DATABASE_URI)
     engine.execute('create extension if not exists fuzzystrmatch')
 
+
 @manager.command
 def drop_and_create_all_tables():
     db.drop_all()
@@ -81,7 +82,12 @@ def seed():
     db.create_all()
     role = Role(name='admin', description='admin')
     role.save()
-    user = User(yodlee_user_id=10049403)
+    # Username:sbMemmassover2 Password: sbMemmassover2#123
+    user = User(
+        email='user@example.com',
+        _username='sbMemmassover2',
+        yodlee_user_id=10049404,
+    )
     user.roles.append(role)
     user.save()
 
