@@ -10,13 +10,29 @@
         <input type="hidden" name="token" value="{{ fastlink_token }}">
         <input type="hidden" name="redirectReq" value=true>
     </form>
-    <div class="row">
-    <div id="fastlink" class="embed-responsive embed-responsive-16by9" style="display: none;">
-        <iframe class="embed-responsive-item" name="my-iframe"
-                src="{{ fastlink_url }}">
-        </iframe>
+
+    <!-- Modal -->
+    <div class="modal show" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="row">
+                <div class="col-xs-8">
+                    <h4 class="modal-title" id="myModalLabel">Add your accounts</h4>
+                </div>
+                <div class="col-xs-4">
+                    <button type="button" class="btn btn-primary pull-right">Done</button>
+                </div>
+            </div>
+          </div>
+            <iframe id="fastlink" name="my-iframe" src="{{ fastlink_url }}" style="display: none;">
+            </iframe>
+        </div>
+      </div>
     </div>
-    </div>
+
+
     <script type="text/javascript">
         document.getElementById('fastlinkForm').submit();
         document.getElementById('fastlink').style.display = 'block';
