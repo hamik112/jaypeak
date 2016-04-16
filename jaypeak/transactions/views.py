@@ -33,25 +33,7 @@ def login():
         if not error:
             login_user(user)
             session['user_session_token'] = token
-
-            yodlee_transactions = utils.get_yodlee_transactions_or_400(
-                session['cobrand_session_token'],
-                session['user_session_token'],
-            )
-
-            transactions = []
-            for yodlee_transaction in yodlee_transactions:
-                transaction = Transaction.get_or_create_from_yodlee_transactions(  # nopep8
-                    yodlee_transaction, current_user.id
-                )
-                transactions.append(transaction)
-
-            for transaction in transactions:
-                if transaction.recurring_transaction_id:
-                    continue
-                RecurringTransaction.add_or_create_by_transaction(transaction)
-
-            return redirect(url_for('.recurring_transactions'))
+            return redirect(url_for('.sync_transactions'))
 
         flash(error, 'danger')
 
@@ -59,6 +41,32 @@ def login():
         'transactions/login.html',
         login_form=login_form
     )
+
+
+@bp.route('/sync-transactions')
+@login_required
+def sync_transactions():
+    yodlee_transactions = utils.get_yodlee_transactions_or_400(
+        session['cobrand_session_token'],
+        session['user_session_token'],
+    )
+    transactions = []
+    for yodlee_transaction in yodlee_transactions:
+        transaction = Transaction.get_or_create_from_yodlee_transactions(  # nopep8
+            yodlee_transaction, current_user.id
+        )
+        transactions.append(transaction)
+
+    for transaction in transactions:
+        if transaction.recurring_transaction_id:
+            continue
+        RecurringTransaction.add_or_create_by_transaction(transaction)
+
+    if request.args.get('fue'):
+        current_user.fue_complete = True
+        current_user.save()
+
+    return redirect(url_for('.recurring_transactions'))
 
 
 @bp.route('/register', methods=['GET', 'POST'])
@@ -79,7 +87,7 @@ def register():
             user.save()
             session['user_session_token'] = token
             login_user(user)
-            return redirect(url_for('.recurring_transactions'))
+            return redirect(url_for('.welcome'))
 
         flash(error, 'danger')
 
@@ -151,16 +159,16 @@ def delete_user():
     return redirect(url_for('.index'))
 
 
-@bp.route('/fastlink')
+@bp.route('/welcome')
 @login_required
-def fastlink():
+def welcome():
     fastlink_token = utils.get_yodlee_fastlink_token_or_400(
         session['cobrand_session_token'],
         session['user_session_token'],
     )
     fastlink_url = yc.config['FASTLINK_URL']
     return render_template(
-        'transactions/fastlink.html',
+        'transactions/welcome.html',
         user_session_token=session['user_session_token'],
         fastlink_token=fastlink_token,
         fastlink_url=fastlink_url
