@@ -11,4 +11,3 @@ script:
   - make coverage
 after_success:
   - python manage.py update_production_db
-  - export CONFIG=config.ProductionConfig && python manage.py db upgrade
