@@ -62,10 +62,6 @@ def sync_transactions():
             continue
         RecurringTransaction.add_or_create_by_transaction(transaction)
 
-    if request.args.get('fue'):
-        current_user.fue_complete = True
-        current_user.save()
-
     return redirect(url_for('.recurring_transactions'))
 
 

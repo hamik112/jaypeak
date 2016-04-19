@@ -4,6 +4,8 @@ import sys
 
 from flask import current_app as app
 from flask_script import Manager, prompt, prompt_pass, prompt_bool
+from flask_migrate import MigrateCommand
+
 from sqlalchemy import create_engine
 from sqlalchemy_utils import database_exists, create_database, drop_database
 
@@ -18,6 +20,7 @@ from jaypeak.transactions.schemas import user_schema, \
 
 manager = Manager(create_app)
 
+manager.add_command('db', MigrateCommand)
 
 @manager.command
 def runserver(port=5000):

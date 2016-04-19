@@ -10,7 +10,7 @@ from ..extensions import admin
 class UserAdmin(ModelView):
     column_display_pk = True
     column_searchable_list = ('id', 'yodlee_user_id', 'email')
-    column_list = ('id', 'yodlee_user_id', 'email', 'fue_complete')
+    column_list = ('id', 'yodlee_user_id', 'email')
 
     def is_accessible(self):
         return current_user.has_role('admin')

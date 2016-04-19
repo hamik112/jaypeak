@@ -27,7 +27,6 @@ class User(db.Model, UserMixin):
     yodlee_user_id = db.Column(db.Integer)
     email = db.Column(db.String(255), unique=True, nullable=False)
     _username = db.Column(db.String(255), unique=True)
-    fue_complete = db.Column(db.Boolean)
     recurring_transactions = db.relationship(
         'RecurringTransaction',
         backref='user',

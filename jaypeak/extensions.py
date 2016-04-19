@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_security import Security, current_user
 from flask_login import LoginManager
 from flask_debugtoolbar import DebugToolbarExtension
+from flask_migrate import Migrate
 
 from . import yodlee
 
@@ -14,6 +15,7 @@ db = SQLAlchemy()
 security = Security()
 login_manager = LoginManager()
 toolbar = DebugToolbarExtension()
+migrate = Migrate()
 
 
 class AdminIndexView(flask_admin.AdminIndexView):
