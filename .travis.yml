@@ -11,4 +11,4 @@ script:
   - make coverage
 before_deploy:
   - python manage.py update_production_db
-  - python manage.py db upgrade
+  - export CONFIG=config.ProductionConfig && python manage.py db upgrade
