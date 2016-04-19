@@ -9,6 +9,6 @@ script:
   - make lint
   - export CONFIG=config.CIConfig && make test
   - make coverage
-before_deploy:
+after_success:
   - python manage.py update_production_db
   - export CONFIG=config.ProductionConfig && python manage.py db upgrade
