@@ -62,6 +62,16 @@ h3.recurring-transaction{
     padding-left: 8px;
 }
 
+.fa-chevron-left{
+    padding-right: 8px;
+    font-size: 20px;
+}
+
+.fa-chevron-right{
+    padding-left: 8px;
+    font-size: 20px;
+}
+
 hr{
     border-color: #ddd;
 }
@@ -70,21 +80,9 @@ li{
     text-transform: uppercase;
 }
 
-.modal-dialog {
-  width: 85%;
-  height: 85%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.modal-content {
-  height: auto;
-  min-height: 100%;
-}
-
 iframe {
     border: 0;
     position: absolute;
-    height: 85%;
+    height: 100%;
     width: 100%;
 }

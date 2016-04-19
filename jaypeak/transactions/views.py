@@ -155,7 +155,7 @@ def delete_user():
     return redirect(url_for('.index'))
 
 
-@bp.route('/welcome')
+@bp.route('/welcome/add-accounts')
 @login_required
 def welcome():
     fastlink_token = utils.get_yodlee_fastlink_token_or_400(
