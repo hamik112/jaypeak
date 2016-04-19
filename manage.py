@@ -22,6 +22,7 @@ manager = Manager(create_app)
 
 manager.add_command('db', MigrateCommand)
 
+
 @manager.command
 def runserver(port=5000):
     app.run(port=int(port))
