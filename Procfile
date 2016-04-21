@@ -1,2 +1,2 @@
 web: gunicorn "jaypeak:create_app()"
-worker: celery worker -A lifts.main.tasks -l info
+worker: celery worker -A jaypeak.transactions.tasks -l info
