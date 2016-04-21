@@ -72,6 +72,11 @@ h3.recurring-transaction{
     font-size: 20px;
 }
 
+
+.fa-square-o, fa-check-square-o{
+    padding-right: 8px;
+}
+
 hr{
     border-color: #ddd;
 }
@@ -86,3 +91,4 @@ iframe {
     height: 100%;
     width: 100%;
 }
+

@@ -157,15 +157,25 @@ def delete_user():
 
 @bp.route('/welcome/add-accounts')
 @login_required
-def welcome():
+def add_accounts():
     fastlink_token = utils.get_yodlee_fastlink_token_or_400(
         session['cobrand_session_token'],
         session['user_session_token'],
     )
     fastlink_url = yc.config['FASTLINK_URL']
     return render_template(
-        'transactions/welcome.html',
+        'transactions/add_accounts.html',
         user_session_token=session['user_session_token'],
         fastlink_token=fastlink_token,
         fastlink_url=fastlink_url
     )
+
+
+@bp.route('/welcome')
+def welcome():
+    return render_template('transactions/welcome.html')
+
+
+@bp.route('/welcome/sync-transactions')
+def sync_transactions2():
+    return render_template('transactions/sync_transactions.html')

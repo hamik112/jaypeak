@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row" style="padding-top: 12px; padding-bottom: 12px;">
+        <div class="col-md-12">
+                <a href="{{ url_for('transactions.welcome') }}">
+                    <button class="btn btn-default" style="font-size: 24px;">
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i>Back
+                    </button>
+                </a>
+                <a href="{{ url_for('transactions.sync_transactions2') }}" class="pull-right">
+                    <button class="btn btn-default" style="font-size: 24px;">
+                        Next<i class="fa fa-chevron-right" aria-hidden="true"></i>
+                    </button>
+                </a>
+        </div>
+    </div>
+</div>
+<div class="container-fluid" id="fastlink" style="display: none;">
+    <div class="row">
+        <iframe name="my-iframe" src="{{ fastlink_url }}"></iframe>
+    </div>
+
+    <form action="{{ fastlink_url }}"
+          id="fastlinkForm" target="my-iframe" method="post">
+
+        <input type="hidden" name="app" value="10003600">
+        <input type="hidden" name="rsession" value="{{ user_session_token }}">
+        <input type="hidden" name="token" value="{{ fastlink_token }}">
+        <input type="hidden" name="redirectReq" value=true>
+    </form>
+
+
+    <script type="text/javascript">
+        document.getElementById('fastlinkForm').submit();
+        document.getElementById('fastlink').style.display = 'block';
+        document.getElementById('fastlink').style.border = '1px solid #eee';
+    </script>
+</div>
+{% endblock %}
