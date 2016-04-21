@@ -10,7 +10,6 @@ from sqlalchemy import create_engine
 from sqlalchemy_utils import database_exists, create_database, drop_database
 
 from config import TestConfig, CIConfig, LocalConfig, ProductionConfig
-import jaypeak
 from jaypeak import create_app
 from jaypeak.transactions.models import User, Role
 from jaypeak.extensions import db, yc
@@ -38,7 +37,8 @@ def make_shell_context():
 
 @manager.command
 def generate_secret_key():
-    print(jaypeak.transactions.utils.generate_random_string(24))
+    from jaypeak.transactions import utils
+    print(utils.generate_random_string(24))
 
 
 @manager.command

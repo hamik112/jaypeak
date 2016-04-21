@@ -7,3 +7,6 @@ test:
 
 coverage:
 	py.test --cov=jaypeak/yodlee jaypeak/yodlee/tests.py
+
+serve:
+	honcho start -f Procfile.dev

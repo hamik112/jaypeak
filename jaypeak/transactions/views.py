@@ -33,7 +33,15 @@ def login():
         if not error:
             login_user(user)
             session['user_session_token'] = token
-            return redirect(url_for('.sync_transactions'))
+
+            # Prevents circular imports
+            from .tasks import sync_transactions
+            sync_transactions.delay(
+                session['cobrand_session_token'],
+                session['user_session_token'],
+                user.id,
+            )
+            return redirect(url_for('.recurring_transactions'))
 
         flash(error, 'danger')
 
@@ -41,28 +49,6 @@ def login():
         'transactions/login.html',
         login_form=login_form
     )
-
-
-@bp.route('/sync-transactions')
-@login_required
-def sync_transactions():
-    yodlee_transactions = utils.get_yodlee_transactions_or_400(
-        session['cobrand_session_token'],
-        session['user_session_token'],
-    )
-    transactions = []
-    for yodlee_transaction in yodlee_transactions:
-        transaction = Transaction.get_or_create_from_yodlee_transactions(  # nopep8
-            yodlee_transaction, current_user.id
-        )
-        transactions.append(transaction)
-
-    for transaction in transactions:
-        if transaction.recurring_transaction_id:
-            continue
-        RecurringTransaction.add_or_create_by_transaction(transaction)
-
-    return redirect(url_for('.recurring_transactions'))
 
 
 @bp.route('/register', methods=['GET', 'POST'])
@@ -155,6 +141,11 @@ def delete_user():
     return redirect(url_for('.index'))
 
 
+@bp.route('/welcome')
+def welcome():
+    return render_template('transactions/welcome.html')
+
+
 @bp.route('/welcome/add-accounts')
 @login_required
 def add_accounts():
@@ -169,11 +160,6 @@ def add_accounts():
         fastlink_token=fastlink_token,
         fastlink_url=fastlink_url
     )
-
-
-@bp.route('/welcome')
-def welcome():
-    return render_template('transactions/welcome.html')
 
 
 @bp.route('/welcome/sync-transactions')

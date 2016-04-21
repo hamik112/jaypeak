@@ -27,6 +27,7 @@ def create_app():
     security.init_app(app, user_datastore)
     bootstrap.init_app(app)
     db.init_app(app)
+    admin._views = []
     admin.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = 'transactions.index'

@@ -1,0 +1,3 @@
+redis: redis-server
+worker: celery worker -A jaypeak.transactions.tasks -l debug
+web: python manage.py runserver
