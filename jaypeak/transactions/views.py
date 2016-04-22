@@ -164,5 +164,7 @@ def add_accounts():
 
 
 @bp.route('/welcome/sync-transactions')
-def sync_transactions2():
+def sync_transactions():
     return render_template('transactions/sync_transactions.html')
+
+
