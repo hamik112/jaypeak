@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, url_for, redirect, flash, \
-    session, abort, request
+    session, abort, request, jsonify
 from flask_login import login_required, current_user, login_user, logout_user
 
 from ..extensions import yc
@@ -35,8 +35,8 @@ def login():
             session['user_session_token'] = token
 
             # Prevents circular imports
-            from .tasks import sync_transactions
-            sync_transactions.delay(
+            from . import tasks
+            tasks.sync_transactions.delay(
                 session['cobrand_session_token'],
                 session['user_session_token'],
                 user.id,
@@ -78,6 +78,14 @@ def register():
         'transactions/register.html',
         register_form=register_form,
     )
+
+
+@bp.route('/sync-transactions/status/<id>')
+def sync_transactions_status(id):
+    # Prevents circular imports
+    from . import tasks
+    task = tasks.sync_transactions.AsyncResult(id)
+    return jsonify({'state': task.state})
 
 
 @bp.route('/logout')
@@ -165,4 +173,15 @@ def add_accounts():
 
 @bp.route('/welcome/sync-transactions')
 def sync_transactions():
-    return render_template('transactions/sync_transactions.html')
+    # Prevents circular imports
+    from . import tasks
+    task = tasks.sync_transactions.delay(
+        session['cobrand_session_token'],
+        session['user_session_token'],
+        current_user.id
+    )
+    url = url_for('.sync_transactions_status', id=task.id)
+    return render_template(
+        'transactions/sync_transactions.html',
+        sync_transactions_status_url=url,
+    )

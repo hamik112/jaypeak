@@ -14,7 +14,7 @@
                 </div>
             </div>
         </div>
-        <div class="list-group-item">
+        <div id="sync-transactions-incomplete" class="list-group-item">
             <div class="row">
                 <div class="col-xs-10" style="font-size: 20px">
                     <i class="fa fa-square-o" aria-hidden="true"></i>
@@ -25,9 +25,28 @@
                 </div>
             </div>
         </div>
+
+        <div id="sync-transactions-complete" class="list-group-item hidden disabled">
+            <div class="row">
+                <div class="col-xs-12" style="font-size: 20px">
+                    <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                    Finding reccuring transactions
+                </div>
+            </div>
+        </div>
     </div>
-
-
+    <a id="next-button" class="btn btn-default btn-lg hidden"
+       href="{{ url_for('transactions.recurring_transactions') }}" >
+        Next
+    </a>
+    <script type="text/javascript">
+        var SYNC_TRANSACTIONS_STATUS_URL = '{{ sync_transactions_status_url }}';
+    </script>
 
 </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{url_for('static', filename='js/sync-transactions.js')}}"></script>
 {% endblock %}
