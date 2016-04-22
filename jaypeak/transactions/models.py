@@ -45,6 +45,10 @@ class User(db.Model, UserMixin):
         backref=db.backref('users', lazy='dynamic')
     )
 
+    @classmethod
+    def get_by_email(cls, email):
+        return cls.query.filter_by(email=email).first()
+
     @property
     def username(self):
         if self._username:
@@ -68,6 +72,7 @@ class User(db.Model, UserMixin):
 
 
 class AnonymousUser(AnonymousUserMixin):
+
     def has_role(self, role):
         return False
 

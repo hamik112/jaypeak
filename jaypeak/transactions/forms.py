@@ -1,7 +1,9 @@
 from flask_wtf import Form
-from wtforms import PasswordField, BooleanField
+from wtforms import PasswordField, BooleanField, ValidationError
 from wtforms.validators import DataRequired, Email, EqualTo
 from wtforms.fields.html5 import EmailField
+
+from .models import User
 
 
 class LoginForm(Form):
@@ -17,3 +19,8 @@ class RegisterForm(Form):
         'Confirm Password',
         validators=[DataRequired(), EqualTo('password')]
     )
+
+    def validate_email(self, field):
+        user = User.get_by_email(field.data)
+        if user:
+            raise ValidationError('Email address already in use')

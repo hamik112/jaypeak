@@ -64,6 +64,7 @@ def register():
             register_form.password.data,
             user.email,
         )
+
         if not error:
             user.yodlee_user_id = yodlee_user.yodlee_user_id
             user.save()
