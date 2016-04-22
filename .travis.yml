@@ -7,7 +7,6 @@ install: "pip install -r requirements.txt"
 before_script: "python manage.py create_ci_db"
 script:
   - make lint
-  - export CONFIG=config.CIConfig && make test
-  - make coverage
+  - export CONFIG=config.CIConfig && make coverage
 after_success:
   - python manage.py update_production_db
