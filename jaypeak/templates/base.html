@@ -10,7 +10,9 @@
 {% endblock %}
 
 {% block navbar %}
-  {% if current_user.is_authenticated %}
+  {% if current_user.is_authenticated and 'welcome' in request.path %}
+    {% include 'welcome_navbar.html' %}
+  {% elif current_user.is_authenticated %}
     {% include 'navbar.html' %}
     {% include 'flash.html' %}
   {% else %}
