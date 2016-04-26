@@ -22,6 +22,38 @@ manager = Manager(create_app)
 manager.add_command('db', MigrateCommand)
 
 
+@MigrateCommand.command
+def setup():
+    print(app.config['SQLALCHEMY_DATABASE_URI'])
+    engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+    if database_exists(engine.url):
+        drop_database(engine.url)
+    create_database(engine.url)
+    engine.execute('create extension if not exists fuzzystrmatch')
+
+
+@MigrateCommand.command
+def install_fuzzystrmatch():
+    engine = create_engine(ProductionConfig.SQLALCHEMY_DATABASE_URI)
+    engine.execute('create extension if not exists fuzzystrmatch')
+
+
+@MigrateCommand.command
+def seed():
+    db.drop_all()
+    db.create_all()
+    role = Role(name='admin', description='admin')
+    role.save()
+    # Username:sbMemmassover2 Password: sbMemmassover2#123
+    user = User(
+        email='user@example.com',
+        _username='sbMemmassover2',
+        yodlee_user_id=10049404,
+    )
+    user.roles.append(role)
+    user.save()
+
+
 @manager.command
 def runserver(port=5000):
     app.run(port=int(port))
@@ -39,61 +71,6 @@ def make_shell_context():
 def generate_secret_key():
     from jaypeak.transactions import utils
     print(utils.generate_random_string(24))
-
-
-@manager.command
-def create_local_db():
-    engine = create_engine(LocalConfig.SQLALCHEMY_DATABASE_URI)
-    if database_exists(engine.url):
-        drop_database(engine.url)
-    create_database(engine.url)
-    engine.execute('create extension if not exists fuzzystrmatch')
-
-
-@manager.command
-def create_test_db():
-    engine = create_engine(TestConfig.SQLALCHEMY_DATABASE_URI)
-    if database_exists(engine.url):
-        drop_database(engine.url)
-    create_database(engine.url)
-    engine.execute('create extension if not exists fuzzystrmatch')
-
-
-@manager.command
-def create_ci_db():
-    engine = create_engine(CIConfig.SQLALCHEMY_DATABASE_URI)
-    if database_exists(engine.url):
-        drop_database(engine.url)
-    create_database(engine.url)
-    engine.execute('create extension if not exists fuzzystrmatch')
-
-
-@manager.command
-def update_production_db():
-    engine = create_engine(ProductionConfig.SQLALCHEMY_DATABASE_URI)
-    engine.execute('create extension if not exists fuzzystrmatch')
-
-
-@manager.command
-def drop_and_create_all_tables():
-    db.drop_all()
-    db.create_all()
-
-
-@manager.command
-def seed():
-    db.drop_all()
-    db.create_all()
-    role = Role(name='admin', description='admin')
-    role.save()
-    # Username:sbMemmassover2 Password: sbMemmassover2#123
-    user = User(
-        email='user@example.com',
-        _username='sbMemmassover2',
-        yodlee_user_id=10049404,
-    )
-    user.roles.append(role)
-    user.save()
 
 
 @manager.command
@@ -159,5 +136,4 @@ def make_role():
 if __name__ == '__main__':
     if os.environ.get('CONFIG') is None:
         os.environ['CONFIG'] = 'config.LocalConfig'
-
     manager.run()

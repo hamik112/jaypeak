@@ -1,25 +1,32 @@
-To set up the environment:
+Quickstart:
 
-```bash
-virtualenv venv
-source venv/bin/activate
-pip install -r requirements.txt
+    ```bash
+    virtualenv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
 
-python manage.py create_test_db
-python manage.py create_local_db
-python manage.py seed
-```
+    python manage.py db setup
+    python manage.py db seed
 
-To run the development server:
 
-```bash
-python manage.py runserver
-```
+    # Login: user@example.com
+    # password: sbMemmassover2#123
+    make serve
+    ```
 
-To run tests:
+Dependencies:
 
-```bash
-make tests
-```
+
+    ```
+    1. Postgresql
+    2. Redis
+    ```
+
+
+Before commit:
+
+    ```bash
+    make lint && make tests
+    ```
 
 
