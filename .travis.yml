@@ -1,12 +1,12 @@
 language: python
 python:
   - "3.4"
+env:
+  - CONFIG=config.CIConfig
 services:
   - postgres
 install: "pip install -r requirements.txt"
-before_script: "python manage.py create_ci_db"
+before_script: "python manage.py db setup"
 script:
   - make lint
-  - export CONFIG=config.CIConfig && make coverage
-after_success:
-  - python manage.py update_production_db
+  - make coverage
