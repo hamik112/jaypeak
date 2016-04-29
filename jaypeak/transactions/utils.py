@@ -53,29 +53,6 @@ def get_yodlee_cobrand_session_token_or_400():
     return token
 
 
-def get_yodlee_transactions_or_400(cobrand_session_token, user_session_token, params=None):  # nopep8
-    try:
-        response = yc.get_transactions(
-            cobrand_session_token,
-            user_session_token,
-            params
-        )
-    except (RequestException, ValueError) as e:
-        logging.error(e, exc_info=True)
-        abort(400)
-
-    if response.json() == {}:
-        return []
-
-    transactions, errors = transaction_schema.load(response.json())
-
-    if errors:
-        logging.error(errors)
-        abort(400)
-
-    return transactions
-
-
 def get_yodlee_fastlink_token_or_400(cobrand_session_token, user_session_token):  # nopep8
     try:
         response = yc.get_fastlink_token(

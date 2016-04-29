@@ -1,3 +1,5 @@
 redis: redis-server
+# https://github.com/celery/celery/issues/3013
+# Can't get autoreload of celery workers to work
 worker: celery worker -A jaypeak.transactions.tasks -l debug
 web: python manage.py runserver

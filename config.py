@@ -8,6 +8,7 @@ class Config(object):
     BASE_DIRECTORY = _this_directory
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     PERMANENT_SESSION_LIFETIME = timedelta(minutes=25)
+    CELERY_TASK_PUBLISH_RETRY = True
 
 
 class TestConfig(Config):
@@ -17,7 +18,6 @@ class TestConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'postgresql://localhost:5432/testing'
     CELERY_BROKER_URL = None
     CELERY_RESULT_BACKEND = None
-    # CELERY_ALWAYS_EAGER = True
 
 
 class CIConfig(Config):
