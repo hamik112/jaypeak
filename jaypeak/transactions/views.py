@@ -2,8 +2,8 @@ from flask import Blueprint, render_template, url_for, redirect, flash, \
     session, abort, request, jsonify
 from flask_login import login_required, current_user, login_user, logout_user
 
-from ..extensions import yc
-from .models import Transaction, RecurringTransaction, User
+from ..extensions import yc, db
+from .models import RecurringTransaction, User
 from .forms import LoginForm, RegisterForm
 from . import utils
 
@@ -56,7 +56,8 @@ def register():
     register_form = RegisterForm()
     if register_form.validate_on_submit():
         user = User(email=register_form.email.data)
-        user.save()
+        db.session.add(user)
+        db.session.flush()
 
         yodlee_user, token, error = utils.register_yodlee_user(
             session['cobrand_session_token'],
@@ -67,11 +68,13 @@ def register():
 
         if not error:
             user.yodlee_user_id = yodlee_user.yodlee_user_id
+            db.session.commit()
             user.save()
             session['user_session_token'] = token
             login_user(user)
             return redirect(url_for('.welcome'))
 
+        db.session.rollback()
         flash(error, 'danger')
 
     return render_template(
