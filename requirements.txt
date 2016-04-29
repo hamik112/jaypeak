@@ -15,6 +15,7 @@ Flask==0.10.1
 Flask-Admin==1.4.0
 Flask-Bootstrap==3.3.5.7
 Flask-DebugToolbar==0.10.0
+Flask-JWT==0.3.2
 Flask-Login==0.3.2
 Flask-Mail==0.9.1
 Flask-Migrate==1.8.0
@@ -48,6 +49,7 @@ ptyprocess==0.5.1
 py==1.4.31
 pycparser==2.14
 pyflakes==1.0.0
+PyJWT==1.4.0
 pytest==2.8.7
 pytest-cov==2.2.1
 pytest-flask==0.10.0

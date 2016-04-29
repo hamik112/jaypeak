@@ -9,6 +9,8 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     PERMANENT_SESSION_LIFETIME = timedelta(minutes=25)
     CELERY_TASK_PUBLISH_RETRY = True
+    JWT_AUTH_USERNAME_KEY = 'email'
+    JWT_EXPIRATION_DELTA = timedelta(minutes=25)
 
 
 class TestConfig(Config):
