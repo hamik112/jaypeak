@@ -8,6 +8,7 @@ from flask_security import SQLAlchemyUserDatastore
 from .extensions import bootstrap, db, security, admin, login_manager, yc, \
     toolbar, migrate
 from . import transactions
+from jaypeak.api import configure_api_manager
 from jaypeak.transactions import utils
 from .transactions.admin import configure_transactions_admin
 from .transactions.models import User, Role, AnonymousUser
@@ -37,6 +38,7 @@ def create_app():
     toolbar.init_app(app)
 
     configure_transactions_admin(app, db)
+    configure_api_manager(app, db)
 
     if os.environ['CONFIG'] == 'config.ProductionConfig':
         yc.config.from_object(ProductionConfig)
