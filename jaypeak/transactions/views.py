@@ -191,6 +191,14 @@ def welcome_sync_transactions():
     )
 
 
+@bp.route('/cobrand_session_token')
+def cobrand_session_token():
+    cobrand_session_token = utils.get_yodlee_cobrand_session_token_or_400()
+    return jsonify({
+        'cobrand_session_token': cobrand_session_token
+    })
+
+
 class SyncTransactions(MethodView):
 
     def get(self, user_id, task_id):
