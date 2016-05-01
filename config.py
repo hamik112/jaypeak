@@ -20,6 +20,7 @@ class TestConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'postgresql://localhost:5432/testing'
     CELERY_BROKER_URL = None
     CELERY_RESULT_BACKEND = None
+    CELERY_ALWAYS_EAGER = True
 
 
 class CIConfig(Config):

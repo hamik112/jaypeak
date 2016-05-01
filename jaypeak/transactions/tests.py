@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
+from flask import url_for
 
 from .models import Transaction, RecurringTransaction, User
 
@@ -125,3 +126,13 @@ def test_user_delete_cascade(app, user):
     assert len(User.query.all()) == 0
     assert len(Transaction.query.all()) == 0
     assert len(RecurringTransaction.query.all()) == 0
+
+
+def test_sync_transactions_post(app, user, client, user_session_token):
+    with client.session_transaction() as sess:
+        sess['user_session_token'] = user_session_token
+    url = url_for('transactions.sync_transactions', user_id=user.id)
+    response = client.post(url)
+    assert response.status_code == 200
+    assert 'state' in response.json
+    assert 'id' in response.json

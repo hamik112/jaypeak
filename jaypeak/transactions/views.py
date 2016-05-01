@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, url_for, redirect, flash, \
     session, abort, request, jsonify
+from flask.views import MethodView
 from flask_login import login_required, current_user, login_user, logout_user
 
 from ..extensions import yc, db
@@ -175,7 +176,7 @@ def add_accounts():
 
 
 @bp.route('/welcome/sync-transactions')
-def sync_transactions():
+def welcome_sync_transactions():
     # Prevents circular imports
     from . import tasks
     task = tasks.sync_transactions.delay(
@@ -188,3 +189,40 @@ def sync_transactions():
         'transactions/sync_transactions.html',
         sync_transactions_status_url=url,
     )
+
+
+class SyncTransactions(MethodView):
+
+    def get(self, user_id, task_id):
+        # Prevents circular imports
+        from . import tasks
+        task = tasks.sync_transactions.AsyncResult(id)
+        return jsonify({
+            'state': task.state,
+            'id': task.id,
+        })
+
+    def post(self, user_id):
+        # Prevents circular imports
+        from . import tasks
+        task = tasks.sync_transactions.delay(
+            session['cobrand_session_token'],
+            session['user_session_token'],
+            user_id
+        )
+        return jsonify({
+            'state': task.state,
+            'id': task.id,
+        })
+
+sync_transaction_view = SyncTransactions.as_view('sync_transactions')
+bp.add_url_rule(
+    '/user/<int:user_id>/sync_transactions',
+    view_func=sync_transaction_view,
+    methods=['POST', ]
+)
+bp.add_url_rule(
+    '/user/<int:user_id>/sync_transactions/<task_id>',
+    view_func=sync_transaction_view,
+    methods=['GET', ]
+)
