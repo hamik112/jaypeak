@@ -1,4 +1,4 @@
-from flask import jsonify, request
+from flask import jsonify, request, session
 from flask_jwt import JWT, jwt_required
 from .transactions.models import User
 from .transactions import utils
@@ -8,16 +8,12 @@ jwt = JWT()
 
 @jwt.authentication_handler
 def authentication_handler(email, password):
-    cobrand_session_token = request.headers.get('cobrand-session-token')
-    if not cobrand_session_token:
-        return None
-
     user = User.query.filter_by(email=email).first()
     if not user:
         return None
 
     user, token, error = utils.login_yodlee_user(
-        cobrand_session_token,
+        session['cobrand_session_token'],
         user.username,
         password
     )
