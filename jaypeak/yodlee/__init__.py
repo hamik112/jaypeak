@@ -11,7 +11,7 @@ class SandboxConfig(object):
     BASE_URL = 'https://developer.api.yodlee.com/ysl/{}/v1'.format(
         COBRAND_NAME)
     COBRAND_USERNAME = 'sbCobmassover'
-    COBRAND_PASSWORD = '23f6f69b-d434-49b7-aec1-21a04e7da19e'
+    COBRAND_PASSWORD = os.getenv('YODLEE_COBRAND_PASSWORD')
     FASTLINK_URL = 'https://node.developer.yodlee.com/authenticate/restserver/'
 
 
