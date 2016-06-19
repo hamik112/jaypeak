@@ -8,9 +8,6 @@ pip install -r requirements.txt
 python manage.py db setup
 python manage.py db seed
 
-
-# Login: user@example.com
-# password: sbMemmassover2#123
 make serve
 ```
 
